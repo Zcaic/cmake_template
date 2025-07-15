@@ -27,8 +27,21 @@ FetchContent_Declare(
     URL_HASH SHA256=EBA3F3D414D2F8CBA2919C78EC6DAAB08FC71BA2BA4AE502B7E5D4D99FC02CDA
 )
 
-
 FetchContent_MakeAvailable(fmt Eigen3)
+
+# find python
+if (CMAKE_VERSION VERSION_LESS 3.18)
+  set(DEV_MODULE Development)
+else()
+  set(DEV_MODULE Development.Module)
+endif()
+find_package(Python 3.8 COMPONENTS Interpreter ${DEV_MODULE} REQUIRED)
+
+# find nanobind
+execute_process(
+  COMMAND "${Python_EXECUTABLE}" -m nanobind --cmake_dir
+  OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE nanobind_ROOT)
+find_package(nanobind CONFIG REQUIRED)
 
 add_executable(template "./src/main.cpp")
 set_target_properties(template PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out)
@@ -37,7 +50,9 @@ target_link_libraries(template PRIVATE Eigen3::Eigen)
 target_link_options(template PRIVATE -static)
 # set_target_properties(template PROPERTIES LINK_FLAGS "-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic")
 
-
+nanobind_add_module(my_ext "./src/my_ext.cpp")
+set_target_properties(my_ext PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out)
+target_link_options(my_ext PRIVATE -static)
 
 
 
