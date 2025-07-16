@@ -50,7 +50,7 @@ target_link_libraries(template PRIVATE Eigen3::Eigen)
 target_link_options(template PRIVATE -static)
 # set_target_properties(template PROPERTIES LINK_FLAGS "-static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic")
 
-nanobind_add_module(my_ext "./src/my_ext.cpp")
+nanobind_add_module(my_ext NOMINSIZE "./src/my_ext.cpp")
 set_target_properties(my_ext PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out)
 target_link_options(my_ext PRIVATE -static)
 
