@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "Eigen/Dense"
-#include "fmt/color.h"
-#include "fmt/ostream.h"
+#include <Eigen/Dense>
+#include <fmt/color.h>
+#include <fmt/ostream.h>
 
 namespace Mycolors
 {

@@ -1,10 +1,19 @@
 cmake_minimum_required(VERSION 3.26.0)
+if (POLICY CMP0091)
+  cmake_policy(SET CMP0091 NEW)
+endif (POLICY CMP0091)
+
 project(template VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+
+if(MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  add_compile_options("/utf-8") 
+endif()
 
 include(FetchContent)
 
@@ -52,10 +61,7 @@ target_link_options(template PRIVATE -static)
 
 nanobind_add_module(my_ext NOMINSIZE "./src/my_ext.cpp")
 set_target_properties(my_ext PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/out)
-target_link_options(my_ext PRIVATE -static)
-
-
-
+# target_link_options(my_ext PRIVATE -static)
 
 
 # add_custom_command(TARGET test POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy -t "$<TARGET_FILE_DIR:test>" "$<TARGET_RUNTIME_DLLS:test>" COMMAND_EXPAND_LISTS)
